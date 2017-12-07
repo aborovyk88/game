@@ -1,8 +1,8 @@
 /vendor
-Будет удалено .idea/cake_config_setting_v0_6.xml
-Будет удалено .idea/modules.xml
-Будет удалено .idea/monster-fight.iml
-Будет удалено .idea/vcs.xml
-Будет удалено .idea/workspace.xml
-Будет удалено node_modules/
-Будет удалено storage/
+.idea/cake_config_setting_v0_6.xml
+.idea/modules.xml
+.idea/monster-fight.iml
+.idea/vcs.xml
+.idea/workspace.xml
+node_modules/
+storage/
