@@ -3,8 +3,8 @@
         <div class="row">
             <button class="btn btn-success" data-toggle="modal" @click="showModalCreate">Create user</button>
         </div>
-        <div class="row">
-            <div :class="alertSuccess ? 'alert alert-success' : 'alert alert-danger'" v-if="isShowAlert" role="alert">
+        <div class="row" v-if="isShowAlert">
+            <div :class="alertSuccess ? 'alert alert-success' : 'alert alert-danger'" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -27,24 +27,34 @@
                         {{item[value]}}
                     </td>
                     <td>
-                        <button @click="updateUserModal(item['ID'])" class="btn btn-sm btn-primary" title="Edit User">=></button>
-                        <button @click="deleteUser(item['ID'])" class="btn btn-sm btn-danger" title="Delete User">-</button>
+                        <button @click="updateUserModal(item['ID'])" class="btn btn-sm btn-primary" title="Edit User">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        </button>
+                        <button @click="deleteUser(item['ID'])" class="btn btn-sm btn-danger" title="Delete User">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="row">
-            <div class="col-md-4">
-                <button class="btn btn-primary" @click="prevPage">Prev</button>
-            </div>
-            <div class="col-md-4">
+        <div class="row text-center">
+            <nav aria-label="Pager">
+                <ul class="pager">
+                    <li class="previous">
+                        <a @click="prevPage">
+                            <span aria-hidden="true">&larr;</span>
+                        </a>
+                    </li>
+                    <li class="next">
+                        <a @click="nextPage">
+                            <span aria-hidden="true">&rarr;</span>
+                        </a>
+                    </li>
+                </ul>
                 <p>Page: {{currentPage + 1}} in {{countPages}}</p>
-            </div>
-            <div class="col-md-4">
-                <button class="btn btn-primary" @click="nextPage">Next</button>
-            </div>
+            </nav>
         </div>
 
         <div class="row">
