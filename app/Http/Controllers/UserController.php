@@ -25,22 +25,32 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        $users_array = $users->toArray();
-
-        $data = User::getDataLabels($users_array);
+        $array_users = $users->toArray();
+        $collection = collect($array_users);
+        $array_users = $collection->chunk(10);
+        $page_count = $array_users->count();
+        $array_users = $array_users->toArray();
+        $data = User::getDataLabels($array_users[0]);
         $columns = User::getAttributeLabels();
 
         $user_columns = json_encode($columns, JSON_UNESCAPED_UNICODE);
         $user_data = json_encode($data, JSON_UNESCAPED_UNICODE);
-        return view('user.index', compact('user_data', 'user_columns'));
+        return view('user.index', compact('user_data', 'user_columns', 'page_count'));
     }
 
-    public function get() {
+    public function get(Request $request) {
+        $data = $request->input();
         $users = User::all();
-        $data = User::getDataLabels($users->toArray());
+        $array_users = $users->toArray();
+        $collection = collect($array_users);
+        $array_users = $collection->chunk($data['perPage']);
+        $page_count = $array_users->count();
+        $array_users = $array_users->toArray();
+        $data = User::getDataLabels($array_users[$data['currentPage']]);
 
         return response()->json([
-            'data' => $data
+            'data' => $data,
+            'page_count' => $page_count
         ]);
     }
 

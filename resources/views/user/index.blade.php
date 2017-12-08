@@ -6,7 +6,7 @@
 
 @section('content')
 <div id="user-list-container">
-    <user_list current_data="{{$user_data}}" current_columns="{{$user_columns}}"></user_list>
+    <user_list current_data="{{$user_data}}" current_columns="{{$user_columns}}" current_page_count="{{$page_count}}"></user_list>
 </div>
 @endsection
 

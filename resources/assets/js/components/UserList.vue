@@ -12,9 +12,6 @@
             </div>
         </div>
         <div class="row">
-            <input v-model="searchGrid" class="form-control" title="search">
-        </div>
-        <div class="row">
             <table class="table">
                 <thead>
                 <tr>
@@ -36,6 +33,18 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-primary" @click="prevPage">Prev</button>
+            </div>
+            <div class="col-md-4">
+                <p>Page: {{currentPage + 1}}</p>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary" @click="nextPage">Next</button>
+            </div>
         </div>
 
         <div class="row">
@@ -77,11 +86,12 @@
     import axios from 'axios';
 
     module.exports = {
-        props: ['current_columns', 'current_data'],
+        props: ['current_columns', 'current_data', 'current_page_count'],
 
         data: function () {
             return {
                 dataTable: JSON.parse(this.current_data),
+                countPages: this.current_page_count,
                 isShowAlert: false,
                 alertMessage: null,
                 alertSuccess: false,
@@ -90,8 +100,8 @@
                 user_id: null,
                 isNew: true,
                 modalTitle: 'Create User',
-
-                searchGrid: ''
+                perPage: 10,
+                currentPage: 0,
             };
         },
         methods: {
@@ -129,8 +139,12 @@
             },
             getDataTable: function () {
                 let vm = this;
-                axios.get('/users/get').then(response => {
+                axios.post('/users/get', {
+                    currentPage: vm.currentPage,
+                    perPage: vm.perPage
+                }).then(response => {
                     vm.dataTable = response.data.data;
+                    vm.countPages = response.data.page_count;
                 });
             },
             getDataUser: function (id) {
@@ -162,22 +176,25 @@
                 this.user_name = null;
                 this.getDataTable();
             },
+            nextPage: function () {
+                if (this.currentPage < this.countPages) {
+                    this.currentPage++;
+                    this.getDataTable();
+                }
+            },
+            prevPage: function () {
+                if (this.currentPage > 0) {
+                    this.currentPage--;
+                    this.getDataTable();
+                }
+            }
         },
         computed: {
             gridColumns: function () {
                 return JSON.parse(this.current_columns);
             },
             gridData: function () {
-                return this.dataTable.filter((value) => {
-                    let columns = this.gridColumns;
-                    let newData = [];
-                    for (let i = 0; i < columns.length; i++) {
-                        let data = value[columns[i]].toString();
-                        newData[i] = data.match(this.searchGrid);
-                    }
-                    console.log(newData);
-                    return newData;
-                });
+                return this.dataTable;
             }
         }
     }

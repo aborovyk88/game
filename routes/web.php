@@ -22,7 +22,7 @@ Route::post('/game/store', 'GameController@store');
 
 //users info
 Route::get('/users', 'UserController@index');
-Route::get('/users/get', 'UserController@get');
+Route::post('/users/get', 'UserController@get');
 Route::get('/users/get/{id}', 'UserController@getData');
 
 //users crad
