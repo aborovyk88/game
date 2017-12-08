@@ -40,7 +40,7 @@
                 <button class="btn btn-primary" @click="prevPage">Prev</button>
             </div>
             <div class="col-md-4">
-                <p>Page: {{currentPage + 1}}</p>
+                <p>Page: {{currentPage + 1}} in {{countPages}}</p>
             </div>
             <div class="col-md-4">
                 <button class="btn btn-primary" @click="nextPage">Next</button>
@@ -101,7 +101,7 @@
                 isNew: true,
                 modalTitle: 'Create User',
                 perPage: 10,
-                currentPage: 0,
+                currentPage: 0
             };
         },
         methods: {
