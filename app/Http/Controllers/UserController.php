@@ -24,33 +24,22 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        $array_users = $users->toArray();
-        $collection = collect($array_users);
-        $array_users = $collection->chunk(10);
-        $page_count = $array_users->count();
-        $array_users = $array_users->toArray();
-        $data = User::getDataLabels($array_users[0]);
+        $data = User::getPaginateData();
         $columns = User::getAttributeLabels();
+        $page_count = $data['count'];
 
         $user_columns = json_encode($columns, JSON_UNESCAPED_UNICODE);
-        $user_data = json_encode($data, JSON_UNESCAPED_UNICODE);
+        $user_data = json_encode($data['data'], JSON_UNESCAPED_UNICODE);
+
         return view('user.index', compact('user_data', 'user_columns', 'page_count'));
     }
 
     public function get(Request $request) {
         $data = $request->input();
-        $users = User::all();
-        $array_users = $users->toArray();
-        $collection = collect($array_users);
-        $array_users = $collection->chunk($data['perPage']);
-        $page_count = $array_users->count();
-        $array_users = $array_users->toArray();
-        $data = User::getDataLabels($array_users[$data['currentPage']]);
-
+        $users = User::getPaginateData($data['currentPage'], $data['perPage']);
         return response()->json([
-            'data' => $data,
-            'page_count' => $page_count
+            'data' => $users['data'],
+            'page_count' => $users['count']
         ]);
     }
 

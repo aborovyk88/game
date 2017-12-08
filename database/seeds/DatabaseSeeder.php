@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $count = 0;
-        while ($count < 1000) {
+        while ($count < 10000) {
             DB::table('users')->insert([
                 'name' => str_random(10),
                 'email' => str_random(10).'@gmail.com',

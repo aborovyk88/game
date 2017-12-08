@@ -64,7 +64,11 @@ class User extends Authenticatable
         return $data;
     }
 
-    public static function getDataLabels($users_array) {
+    /**
+     * @param array $users_array
+     * @return array
+     */
+    public static function getDataLabels(array $users_array) {
         $data = [];
         foreach ($users_array as $user) {
             $temp = [];
@@ -74,6 +78,17 @@ class User extends Authenticatable
             $data[] = $temp;
         }
         return $data;
+    }
+
+    public static function getPaginateData ($current_page = 0, $per_page = 10) {
+        $users = self::all();
+        $array_users = $users->chunk($per_page);
+        $page_count = $array_users->count();
+        $array_users = $array_users->get($current_page)->toArray();
+        return [
+            'count' => $page_count,
+            'data' => self::getDataLabels($array_users)
+        ];
     }
 
     public function games()
