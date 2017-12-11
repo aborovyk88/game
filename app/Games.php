@@ -1,7 +1,7 @@
 <?php namespace App;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * Class Games
@@ -10,7 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property User $user
  * @package App
  */
-class Games extends Authenticatable
+class Games extends Model
 {
     use Notifiable;
 
