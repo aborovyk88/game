@@ -1,8 +1,4 @@
 /vendor
-.idea/cake_config_setting_v0_6.xml
-.idea/modules.xml
-.idea/monster-fight.iml
-.idea/vcs.xml
-.idea/workspace.xml
+.idea/
 node_modules/
 storage/
