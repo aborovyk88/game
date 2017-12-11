@@ -106,6 +106,7 @@
                 alertMessage: null,
                 alertSuccess: false,
                 user_email: null,
+                user_amount: null,
                 user_name: null,
                 user_id: null,
                 isNew: true,
@@ -160,8 +161,10 @@
             getDataUser: function (id) {
                 let vm = this;
                 axios.get('/users/get/' + id).then(response => {
+                    vm.amount = response.data.amount;
                     vm.user_name = response.data.name;
                     vm.user_email = response.data.email;
+                    vm.user_amount = response.data.amount;
                     vm.user_id = response.data.id;
                 });
             },

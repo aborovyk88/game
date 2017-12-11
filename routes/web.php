@@ -17,7 +17,7 @@ Route::get('/', 'HomeController@index');
 
 //games
 Route::get('/game', 'GameController@index');
-Route::get('/game/list', 'GameController@listItem');
+Route::get('/game/list', 'GameController@listItems');
 Route::post('/game/store', 'GameController@store');
 
 //users info

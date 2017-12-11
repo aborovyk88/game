@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * Class Games
  * @property integer $user_id
  * @property boolean $is_win
+ * @property User $user
  * @package App
  */
 class Games extends Authenticatable
@@ -35,7 +36,7 @@ class Games extends Authenticatable
 
     public function user()
     {
-        return $this->hasOne('app\User', 'user_id');
+        return $this->hasOne('app\User', 'id', 'user_id');
     }
 
 }

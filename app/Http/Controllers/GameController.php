@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Games;
+use App\User;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -35,7 +36,7 @@ class GameController extends Controller
         }
         $game = new Games();
 
-        if ($game->setData($data) && $game->save()) {
+        if ($game->setData($data) && $game->save() && $game->user->updateAmount((boolean)$game->is_win)) {
             $success = true;
         }
         return response()->json([

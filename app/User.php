@@ -9,13 +9,15 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    const GAME_AMOUNT = 10;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'amount',
     ];
 
     protected $table = 'users';
@@ -35,7 +37,8 @@ class User extends Authenticatable
             'name' => 'Name',
             'email' => 'E`mail',
             'created_at' => 'Created At',
-            'updated_at' => 'Updated At'
+            'updated_at' => 'Updated At',
+            'amount' => 'Amount'
         ];
     }
 
@@ -80,8 +83,13 @@ class User extends Authenticatable
         return $data;
     }
 
+    /**
+     * @param int $current_page
+     * @param int $per_page
+     * @return array
+     */
     public static function getPaginateData ($current_page = 0, $per_page = 10) {
-        $users = self::all();
+        $users = self::find(1)->orderBy('amount', 'desc')->get();
         $array_users = $users->chunk($per_page);
         $page_count = $array_users->count();
         $array_users = $array_users->get($current_page)->toArray();
@@ -89,6 +97,19 @@ class User extends Authenticatable
             'count' => $page_count,
             'data' => self::getDataLabels($array_users)
         ];
+    }
+
+    /**
+     * @param boolean $is_win
+     * @return bool
+     */
+    public function updateAmount ($is_win) {
+        if ($is_win) {
+            $this->amount -= self::GAME_AMOUNT;
+        } else {
+            $this->amount += self::GAME_AMOUNT;
+        }
+        return $this->update();
     }
 
     public function games()
