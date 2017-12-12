@@ -1,7 +1,6 @@
 <?php namespace App\Http\Controllers;
 
 use App\Games;
-use App\User;
 use Illuminate\Http\Request;
 use Validator;
 

@@ -5,8 +5,11 @@ use Illuminate\Notifications\Notifiable;
 
 /**
  * Class Games
+ * @property integer $id
  * @property integer $user_id
  * @property boolean $is_win
+ * @property string $created_at
+ * @property string $updated_at
  * @property User $user
  * @package App
  */

@@ -1,10 +1,21 @@
-<?php
+<?php namespace App;
 
-namespace App;
-
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * Class User
+ * @property integer $id
+ * @property string $created_at
+ * @property string $updated_at
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ * @property double $amount
+ * @property Games[] $games
+ * @package App
+ */
 class User extends Authenticatable
 {
     use Notifiable;
@@ -89,6 +100,7 @@ class User extends Authenticatable
      * @return array
      */
     public static function getPaginateData ($current_page = 0, $per_page = 10) {
+        /** @var Collection $users */
         $users = self::find(1)->orderBy('amount', 'desc')->get();
         $array_users = $users->chunk($per_page);
         $page_count = $array_users->count();
