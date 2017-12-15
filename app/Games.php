@@ -22,21 +22,11 @@ class Games extends Model
         'is_win'
     ];
 
-    public static $validator = [
-        'is_win'=>'array',
-        'user_id'=>'required|integer|exists:users,id'
-    ];
-
-    public function setData ($data) {
-        if (is_array($data)) {
-            $this->user_id = $data['user_id'];
-            $this->is_win = $data['isWin'];
-            return true;
-        }
-        return false;
-
-    }
-
+    /**
+     * get user with game
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function user()
     {
         return $this->hasOne('app\User', 'id', 'user_id');

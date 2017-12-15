@@ -61,6 +61,11 @@ class User extends Authenticatable
         return null;
     }
 
+    /**
+     * Get attribute label for column title table users
+     *
+     * @return array
+     */
     public static function getAttributeLabels () {
         $data = [];
         foreach (self::attributeLabels() as $label) {
@@ -70,6 +75,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Get users data with attribute labels
+     *
      * @param array $users_array
      * @return array
      */
@@ -86,6 +93,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Get users data chunk
+     *
      * @param int $current_page
      * @param int $per_page
      * @return array
@@ -103,6 +112,8 @@ class User extends Authenticatable
     }
 
     /**
+     * increment or decrement amount user
+     *
      * @param boolean $is_win
      * @return bool
      */
@@ -115,11 +126,18 @@ class User extends Authenticatable
         return $this->update();
     }
 
+    /**
+     * Generate random password user for create in frontend
+     */
     public function generatePassword () {
         $pass = bcrypt(str_random(6));
         $this->password = $pass;
     }
 
+    /**
+     * Get games relation with user [id => user_id]
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function games()
     {
         return $this->hasMany('App\Games', 'user_id');

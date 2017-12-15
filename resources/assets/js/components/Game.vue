@@ -67,7 +67,7 @@
                 gameIsRunning: false,
                 turns: [],
                 isSendResult: false,
-                isPlayerWin: false
+                isPlayerWin: 0
             };
         },
         methods: {
@@ -139,7 +139,7 @@
                     }
                     return true;
                 } else if (this.playerHealth <= 0) {
-                    this.isPlayerWin = true;
+                    this.isPlayerWin = 1;
                     this.sendResults();
                     if (confirm('You lost! New Game?')) {
                         this.startGame();
@@ -161,7 +161,7 @@
         computed: {
             resultGame: function () {
                 return {
-                    isWin: this.isPlayerWin,
+                    is_win: this.isPlayerWin,
                     user_id: this.user_id
                 };
             }   

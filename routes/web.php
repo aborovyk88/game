@@ -1,5 +1,4 @@
 <?php
-use App\Http\Middleware\Ajax;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,6 +9,7 @@ use App\Http\Middleware\Ajax;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Auth::routes();
 
 //home
@@ -19,10 +19,10 @@ Route::get('/', 'HomeController@index');
 Route::get('/game', 'GameController@index');
 Route::post('/game/store', 'GameController@store');
 
-//users crud
+//users index
 Route::get('/users', 'UserController@index');
 
-
+//users crud
 Route::post('/users/get', 'UserController@get');
 Route::get('/users/get/{user}', 'UserController@getData');
 Route::post('/users/delete/{user}', 'UserController@delete');

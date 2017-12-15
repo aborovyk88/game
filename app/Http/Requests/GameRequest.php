@@ -1,9 +1,8 @@
 <?php namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UserRequest extends FormRequest
+class GameRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,17 +21,9 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
-        $uniqueRule = Rule::unique('users');
-
-        $userModel = $this->route('user');
-        if($userModel) {
-            $uniqueRule->ignore($userModel->email, 'email');
-        }
-
         $rules = [
-            'name' => ['required', 'string'],
-            'email' => ['required', 'email', $uniqueRule],
-            'amount' => ['integer']
+            'is_win' => ['required', 'integer'],
+            'user_id' => ['required', 'integer', 'exists:users,id'],
         ];
 
         return $rules;

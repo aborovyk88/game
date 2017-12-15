@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Games;
+use App\Http\Requests\GameRequest;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -24,18 +25,17 @@ class GameController extends Controller
         return view('game.index');
     }
 
-    public function store (Request $request) {
-        $data = $request->input();
+    /**
+     * Save game and update user amount
+     *
+     * @param GameRequest $gameRequest
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store (GameRequest $gameRequest) {
+        $game = new Games($gameRequest->all());
         $success = false;
-        $validator = Validator::make($data, Games::$validator);
-
-        if ($validator->fails()) {
-            session()->flash('error', $validator->errors()->first());
-            $this->throwValidationException($request, $validator);
-        }
-        $game = new Games();
-
-        if ($game->setData($data) && $game->save() && $game->user->updateAmount((boolean)$game->is_win)) {
+        $game->is_win = (integer)$game->is_win;
+        if ($game->save() && $game->user->updateAmount((boolean)$game->is_win)) {
             $success = true;
         }
         return response()->json([
