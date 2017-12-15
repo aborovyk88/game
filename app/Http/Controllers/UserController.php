@@ -4,7 +4,6 @@ use App\Http\Requests\UserRequest;
 use App\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Validator;
 use Exception;
 use Auth;
 
@@ -63,6 +62,11 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    /**
+     * Create new user
+     * @param UserRequest $userRequest
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function create (UserRequest $userRequest) {
         try {
             /** @var Builder $user */
@@ -89,6 +93,11 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Delete user
+     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function delete (User $user) {
         try {
             $user->delete();
@@ -105,6 +114,12 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Update exist user
+     * @param UserRequest $userRequest
+     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update (UserRequest $userRequest, User $user) {
         try {
             $data = $userRequest->all();
