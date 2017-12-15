@@ -101,7 +101,7 @@ class User extends Authenticatable
      */
     public static function getPaginateData ($current_page = 0, $per_page = 10) {
         /** @var Collection $users */
-        $users = self::find(1)->orderBy('amount', 'desc')->get();
+        $users = self::orderBy('amount', 'desc')->get();
         $array_users = $users->chunk($per_page);
         $page_count = $array_users->count();
         $array_users = $array_users->get($current_page)->toArray();
