@@ -1,12 +1,17 @@
 <?php namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use App\User;
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Validator;
 use Exception;
 use Auth;
 
+/**
+ * Class UserController
+ * @package App\Http\Controllers
+ */
 class UserController extends Controller
 {
     /**
@@ -18,7 +23,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * View for users table
      *
      * @return \Illuminate\Http\Response
      */
@@ -34,6 +39,12 @@ class UserController extends Controller
         return view('user.index', compact('user_data', 'user_columns', 'page_count'));
     }
 
+    /**
+     * Get users data with page
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function get(Request $request) {
         $data = $request->input();
         $users = User::getPaginateData($data['currentPage'], $data['perPage']);
@@ -43,36 +54,27 @@ class UserController extends Controller
         ]);
     }
 
-    public function getData($id) {
-        /** @var User $user */
-        $user = User::find($id);
-
-        if (!($user instanceof User)) {
-            throw new Exception('User not found', 404);
-        }
-
-        $data = $user->toArray();
-
-        return response()->json($data);
+    /**
+     * Get data user with ID
+     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getData(User $user) {
+        return response()->json($user);
     }
 
-    public function create (Request $request) {
+    public function create (UserRequest $userRequest) {
         try {
-            $data = $request->input('User');
-            $user = new User();
+            /** @var Builder $user */
+            $data = $userRequest->all();
 
-            $validator = Validator::make($data, User::$validatorCreate);
+            $user = new User([
+                'name' => $data['name'],
+                'email' => $data['email'],
+            ]);
+            $user->generatePassword();
 
-            if ($validator->fails()) {
-                throw new Exception($validator->errors()->first(), 500);
-            }
 
-            $user->name = $data['name'];
-            $user->email = $data['email'];
-            $user->password = bcrypt($data['name']);
-            $user->remember_token = bcrypt($data['name']);
-            $user->created_at = Carbon::now()->format("Y-m-d H:i:s");
-            $user->updated_at = Carbon::now()->format("Y-m-d H:i:s");
             if ($user->save()) {
                 return response()->json([
                     'success' => true,
@@ -87,24 +89,14 @@ class UserController extends Controller
         }
     }
 
-    public function delete (Request $request) {
+    public function delete (User $user) {
         try {
-            $id = $request->input('id');
-            $current_user_id = Auth::user()->id;
-            $user = User::find($id);
+            $user->delete();
+            return response()->json([
+                'success' => true,
+                'msg' => 'User has been successful delete'
+            ]);
 
-            if (!($user instanceof User)) {
-                throw new Exception('User not found', 404);
-            } elseif ($current_user_id == $id) {
-                throw new Exception('You can not remove yourself', 500);
-            }
-
-            if ($user->delete()) {
-                return response()->json([
-                    'success' => true,
-                    'msg' => 'User has been successful delete'
-                ]);
-            }
         } catch (Exception $exception) {
             return response()->json([
                 'success' => false,
@@ -113,24 +105,12 @@ class UserController extends Controller
         }
     }
 
-    public function update (Request $request) {
+    public function update (UserRequest $userRequest, User $user) {
         try {
-            $id = $request->input('id');
-            $data = $request->input('User');
+            $data = $userRequest->all();
 
-            $user = User::find($id);
-            if (!($user instanceof User)) {
-                throw new Exception('User not found', 404);
-            }
-
-            $validator = Validator::make($data, User::$validatorUpdate);
-
-            if ($validator->fails()) {
-                throw new Exception($validator->errors()->first(), 500);
-            }
             $user->name = $data['name'];
             $user->email = $data['email'];
-            $user->updated_at = Carbon::now()->format("Y-m-d H:i:s");
 
             if ($user->update()) {
                 return response()->json([

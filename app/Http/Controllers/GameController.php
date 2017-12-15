@@ -42,8 +42,4 @@ class GameController extends Controller
             'success' => $success
         ]);
     }
-
-    public function listItems ($id) {
-
-    }
 }

@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string $name
  * @property string $email
  * @property string $password
+ * @property string $remember_token
  * @property double $amount
  * @property Games[] $games
  * @package App
@@ -52,16 +53,6 @@ class User extends Authenticatable
             'amount' => 'Amount'
         ];
     }
-
-    public static $validatorCreate = [
-        'name'=>'required|string',
-        'email'=>'required|email|unique:users,email'
-    ];
-
-    public static $validatorUpdate = [
-        'name'=>'required|string',
-        'email'=>'required|email'
-    ];
 
     public static function getAttributeLabel ($attribute) {
         if (isset(self::attributeLabels()[$attribute])) {
@@ -122,6 +113,11 @@ class User extends Authenticatable
             $this->amount += self::GAME_AMOUNT;
         }
         return $this->update();
+    }
+
+    public function generatePassword () {
+        $pass = bcrypt(str_random(6));
+        $this->password = $pass;
     }
 
     public function games()

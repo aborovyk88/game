@@ -118,22 +118,17 @@
         methods: {
             addUser: function () {
                 axios.post('/users/create', {
-                    User: {
-                        name: this.user_name,
-                        email: this.user_email
-                    }
+                    name: this.user_name,
+                    email: this.user_email
                 }).then(response => {
                     $('#user-create-modal').modal('hide');
                     this.showAlert(response);
                 });
             },
             editUser: function () {
-                axios.post('/users/update', {
-                    User: {
-                        name: this.user_name,
-                        email: this.user_email
-                    },
-                    id: this.user_id
+                axios.post('/users/update/' + this.user_id, {
+                    name: this.user_name,
+                    email: this.user_email
                 }).then(response => {
                     $('#user-create-modal').modal('hide');
                     this.showAlert(response);
@@ -141,9 +136,7 @@
             },
             deleteUser: function (id) {
                 if (confirm('Do you really want to delete this user?')) {
-                    axios.post('/users/delete', {
-                        id: id
-                    }).then(response => {
+                    axios.post('/users/delete/' + id).then(response => {
                         this.showAlert(response);
                     });
                 }
