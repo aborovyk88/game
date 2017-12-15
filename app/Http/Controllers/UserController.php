@@ -70,14 +70,8 @@ class UserController extends Controller
     public function create (UserRequest $userRequest) {
         try {
             /** @var Builder $user */
-            $data = $userRequest->all();
-
-            $user = new User([
-                'name' => $data['name'],
-                'email' => $data['email'],
-            ]);
+            $user = new User($userRequest->all());
             $user->generatePassword();
-
 
             if ($user->save()) {
                 return response()->json([
@@ -122,12 +116,7 @@ class UserController extends Controller
      */
     public function update (UserRequest $userRequest, User $user) {
         try {
-            $data = $userRequest->all();
-
-            $user->name = $data['name'];
-            $user->email = $data['email'];
-
-            if ($user->update()) {
+            if ($user->update($userRequest->all())) {
                 return response()->json([
                     'success' => true,
                     'msg' => 'User has been successful updated'
