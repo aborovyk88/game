@@ -2,9 +2,11 @@
 
 use App\Games;
 use App\Http\Requests\GameRequest;
-use Illuminate\Http\Request;
-use Validator;
 
+/**
+ * Class GameController
+ * @package App\Http\Controllers
+ */
 class GameController extends Controller
 {
     /**
