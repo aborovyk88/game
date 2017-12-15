@@ -72,13 +72,11 @@ class UserController extends Controller
             /** @var Builder $user */
             $user = new User($userRequest->all());
             $user->generatePassword();
-
-            if ($user->save()) {
-                return response()->json([
-                    'success' => true,
-                    'msg' => 'User '. $user->name .' has been successful created'
-                ]);
-            }
+            $user->save();
+            return response()->json([
+                'success' => true,
+                'msg' => 'User ' . $user->name . ' has been successful created'
+            ]);
         } catch (Exception $exception) {
             return response()->json([
                'success' => false,
@@ -116,13 +114,11 @@ class UserController extends Controller
      */
     public function update (UserRequest $userRequest, User $user) {
         try {
-            if ($user->update($userRequest->all())) {
-                return response()->json([
-                    'success' => true,
-                    'msg' => 'User has been successful updated'
-                ]);
-            }
-
+            $user->update($userRequest->all());
+            return response()->json([
+                'success' => true,
+                'msg' => 'User has been successful updated'
+            ]);
         } catch (Exception $exception) {
             return response()->json([
                 'success' => false,
