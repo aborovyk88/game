@@ -43,36 +43,44 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public static function attributeLabels() {
+
+    /**
+     * @return array
+     */
+    public static function attributeLabels(): array {
         return [
             'id' => 'ID',
             'name' => 'Name',
             'email' => 'E`mail',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
-            'amount' => 'Amount'
+            'amount' => 'Amount',
         ];
     }
 
-    public static function getAttributeLabel ($attribute) {
-        if (isset(self::attributeLabels()[$attribute])) {
-            return self::attributeLabels()[$attribute];
-        }
-        return null;
+
+    /**
+     * @param string $attribute
+     * @return string|null
+     */
+    public static function getAttributeLabel(string $attribute): string {
+        return self::attributeLabels()[$attribute] ?? null;
     }
+
 
     /**
      * Get attribute label for column title table users
      *
      * @return array
      */
-    public static function getAttributeLabels () {
+    public static function getAttributeLabels(): array {
         $data = [];
-        foreach (self::attributeLabels() as $label) {
+        foreach(self::attributeLabels() as $label) {
             $data[] = $label;
         }
         return $data;
     }
+
 
     /**
      * Get users data with attribute labels
@@ -80,17 +88,18 @@ class User extends Authenticatable
      * @param array $users_array
      * @return array
      */
-    public static function getDataLabels(array $users_array) {
+    public static function getDataLabels(array $users_array): array {
         $data = [];
-        foreach ($users_array as $user) {
+        foreach($users_array as $user) {
             $temp = [];
-            foreach ($user as $attribute => $value) {
+            foreach($user as $attribute => $value) {
                 $temp[User::getAttributeLabel($attribute)] = $value;
             }
             $data[] = $temp;
         }
         return $data;
     }
+
 
     /**
      * Get users data chunk
@@ -99,7 +108,7 @@ class User extends Authenticatable
      * @param int $per_page
      * @return array
      */
-    public static function getPaginateData ($current_page = 0, $per_page = 10) {
+    public static function getPaginateData(int $current_page = 0, int $per_page = 10): array {
         /** @var Collection $users */
         $current_page = self::processCurrentPage($current_page);
         $users = self::orderBy('amount', 'desc')->get();
@@ -108,14 +117,20 @@ class User extends Authenticatable
         $array_users = $array_users->get($current_page)->toArray();
         return [
             'count' => $page_count,
-            'data' => self::getDataLabels($array_users)
+            'data' => self::getDataLabels($array_users),
         ];
     }
 
-    public static function processCurrentPage($current_page) {
+
+    /**
+     * @param $current_page
+     * @return int
+     */
+    public static function processCurrentPage(int $current_page): int {
         $current_page--;
         return $current_page < 0 ? 0 : $current_page;
     }
+
 
     /**
      * increment or decrement amount user
@@ -123,29 +138,30 @@ class User extends Authenticatable
      * @param boolean $is_win
      * @return bool
      */
-    public function updateAmount ($is_win) {
-        if ($is_win) {
+    public function updateAmount(bool $is_win): bool {
+        if($is_win) {
             $this->amount -= self::GAME_AMOUNT;
-        } else {
+        }
+        else {
             $this->amount += self::GAME_AMOUNT;
         }
         return $this->update();
     }
 
+
     /**
      * Generate random password user for create in frontend
      */
-    public function generatePassword () {
-        $pass = bcrypt(str_random(6));
-        $this->password = $pass;
+    public function generatePassword() {
+        $this->password = bcrypt(random_bytes(6));
     }
+
 
     /**
      * Get games relation with user [id => user_id]
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function games()
-    {
+    public function games() {
         return $this->hasMany('App\Games', 'user_id');
     }
 }

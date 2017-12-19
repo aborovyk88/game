@@ -3,6 +3,10 @@
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/**
+ * Class UserRequest
+ * @package App\Http\Requests
+ */
 class UserRequest extends FormRequest
 {
     /**
@@ -10,31 +14,27 @@ class UserRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
-    {
+    public function authorize() {
         return true;
     }
+
 
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         $uniqueRule = Rule::unique('users');
-
         $userModel = $this->route('user');
         if($userModel) {
             $uniqueRule->ignore($userModel->email, 'email');
         }
-
         $rules = [
             'name' => ['required', 'string'],
             'email' => ['required', 'email', $uniqueRule],
-            'amount' => ['integer']
+            'amount' => ['integer'],
         ];
-
         return $rules;
     }
 }

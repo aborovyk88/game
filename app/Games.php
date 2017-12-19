@@ -19,16 +19,16 @@ class Games extends Model
 
     protected $fillable = [
         'user_id',
-        'is_win'
+        'is_win',
     ];
+
 
     /**
      * get user with game
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function user()
-    {
+    public function user() {
         return $this->hasOne('app\User', 'id', 'user_id');
     }
 
