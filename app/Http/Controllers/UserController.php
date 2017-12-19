@@ -16,27 +16,25 @@ class UserController extends Controller
     /**
      * Create a new controller instance.
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->middleware('auth');
     }
+
 
     /**
      * View for users table
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         $data = User::getPaginateData();
         $columns = User::getAttributeLabels();
         $page_count = $data['count'];
-
         $user_columns = json_encode($columns, JSON_UNESCAPED_UNICODE);
         $user_data = json_encode($data['data'], JSON_UNESCAPED_UNICODE);
-
         return view('user.index', compact('user_data', 'user_columns', 'page_count'));
     }
+
 
     /**
      * Get users data with page
@@ -48,10 +46,11 @@ class UserController extends Controller
         $data = $request->input();
         $users = User::getPaginateData($data['currentPage'], $data['perPage']);
         return response()->json([
-            'data' => $users['data'],
-            'page_count' => $users['count']
-        ]);
+                                    'data' => $users['data'],
+                                    'page_count' => $users['count'],
+                                ]);
     }
+
 
     /**
      * Get data user with ID
@@ -62,49 +61,53 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+
     /**
      * Create new user
      * @param UserRequest $userRequest
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create (UserRequest $userRequest) {
+    public function create(UserRequest $userRequest) {
         try {
             /** @var Builder $user */
             $user = new User($userRequest->all());
             $user->generatePassword();
             $user->save();
             return response()->json([
-                'success' => true,
-                'msg' => 'User ' . $user->name . ' has been successful created'
-            ]);
-        } catch (Exception $exception) {
+                                        'success' => true,
+                                        'msg' => 'User ' . $user->name . ' has been successful created',
+                                    ]);
+        }
+        catch(Exception $exception) {
             return response()->json([
-               'success' => false,
-               'msg' => $exception->getMessage()
-            ]);
+                                        'success' => false,
+                                        'msg' => $exception->getMessage(),
+                                    ]);
         }
     }
+
 
     /**
      * Delete user
      * @param User $user
      * @return \Illuminate\Http\JsonResponse
      */
-    public function delete (User $user) {
+    public function delete(User $user) {
         try {
             $user->delete();
             return response()->json([
-                'success' => true,
-                'msg' => 'User has been successful delete'
-            ]);
-
-        } catch (Exception $exception) {
+                                        'success' => true,
+                                        'msg' => 'User has been successful delete',
+                                    ]);
+        }
+        catch(Exception $exception) {
             return response()->json([
-                'success' => false,
-                'msg' => $exception->getMessage()
-            ]);
+                                        'success' => false,
+                                        'msg' => $exception->getMessage(),
+                                    ]);
         }
     }
+
 
     /**
      * Update exist user
@@ -112,18 +115,19 @@ class UserController extends Controller
      * @param User $user
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update (UserRequest $userRequest, User $user) {
+    public function update(UserRequest $userRequest, User $user) {
         try {
             $user->update($userRequest->all());
             return response()->json([
-                'success' => true,
-                'msg' => 'User has been successful updated'
-            ]);
-        } catch (Exception $exception) {
+                                        'success' => true,
+                                        'msg' => 'User has been successful updated',
+                                    ]);
+        }
+        catch(Exception $exception) {
             return response()->json([
-                'success' => false,
-                'msg' => $exception->getMessage()
-            ]);
+                                        'success' => false,
+                                        'msg' => $exception->getMessage(),
+                                    ]);
         }
     }
 }
