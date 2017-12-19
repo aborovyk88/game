@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section("styles")
-
+    <link href="/css/user-list.css" rel="stylesheet">
 @endsection
 
 @section('content')

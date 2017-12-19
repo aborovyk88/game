@@ -101,6 +101,7 @@ class User extends Authenticatable
      */
     public static function getPaginateData ($current_page = 0, $per_page = 10) {
         /** @var Collection $users */
+        $current_page = self::processCurrentPage($current_page);
         $users = self::orderBy('amount', 'desc')->get();
         $array_users = $users->chunk($per_page);
         $page_count = $array_users->count();
@@ -109,6 +110,11 @@ class User extends Authenticatable
             'count' => $page_count,
             'data' => self::getDataLabels($array_users)
         ];
+    }
+
+    public static function processCurrentPage($current_page) {
+        $current_page--;
+        return $current_page < 0 ? 0 : $current_page;
     }
 
     /**

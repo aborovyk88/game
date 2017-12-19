@@ -53,7 +53,10 @@
                         </a>
                     </li>
                 </ul>
-                <p>Page: {{currentPage + 1}} in {{countPages}}</p>
+                <div class="pagination-router">
+                    <p>Page: {{currentPage}} in {{countPages}}</p>
+                    <input type="text" v-model="currentPage" v-on:keyup="goToPage">
+                </div>
             </nav>
         </div>
 
@@ -112,7 +115,7 @@
                 isNew: true,
                 modalTitle: 'Create User',
                 perPage: 10,
-                currentPage: 0
+                currentPage: 1
             };
         },
         methods: {
@@ -189,10 +192,21 @@
                 }
             },
             prevPage: function () {
-                if (this.currentPage > 0) {
+                if (this.currentPage > 1) {
                     this.currentPage--;
                     this.getDataTable();
                 }
+            },
+            goToPage: function () {
+                if (this.currentPage < 1) {
+                    this.currentPage = 1;
+                }
+
+                if (this.currentPage > this.countPages) {
+                    this.currentPage = this.countPages;
+                }
+
+                this.getDataTable();
             }
         },
         computed: {
