@@ -16,12 +16,10 @@ class DatabaseSeeder extends Seeder
         $count = 0;
         while ($count < 10000) {
             DB::table('users')->insert([
-                'name' => str_random(10),
-                'email' => str_random(10).'@gmail.com',
-                'password' => bcrypt('secret'),
-                'remember_token' => bcrypt('secret'),
-                'created_at' => Carbon::now()->format("Y-m-d H:i:s"),
-                'updated_at' => Carbon::now()->format("Y-m-d H:i:s")
+                'name' => random_bytes(10),
+                'email' => random_bytes(10).'@gmail.com',
+                'password' => bcrypt(random_bytes(6)),
+                'remember_token' => bcrypt(random_bytes(6))
             ]);
             $count++;
         }

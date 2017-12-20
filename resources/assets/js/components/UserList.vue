@@ -1,7 +1,17 @@
 <template>
     <div class="container">
         <div class="row">
-            <button class="btn btn-success" data-toggle="modal" @click="showModalCreate">Create user</button>
+            <div class="col-md-3">
+                <button class="btn btn-success" data-toggle="modal" @click="showModalCreate">Create user</button>
+            </div>
+            <div class="col-md-3">
+                <label class="control-label" for="per-page">Per Page Items</label>
+                <input type="text" v-model="perPage" v-on:keyup="getDataTable" class="form-control" id="per-page">
+            </div>
+            <div class="col-md-3">
+                <label class="control-label" for="go-page">Go To Page</label>
+                <input type="text" v-model="currentPage" v-on:keyup="goToPage" class="form-control" id="go-page">
+            </div>
         </div>
         <div class="row" v-if="isShowAlert">
             <div :class="alertSuccess ? 'alert alert-success' : 'alert alert-danger'" role="alert">
@@ -44,19 +54,16 @@
                 <ul class="pager">
                     <li class="previous">
                         <a @click="prevPage">
-                            <span aria-hidden="true">&larr;</span>
+                            <span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span>
                         </a>
                     </li>
                     <li class="next">
                         <a @click="nextPage">
-                            <span aria-hidden="true">&rarr;</span>
+                            <span aria-hidden="true" class="glyphicon glyphicon-chevron-right"></span>
                         </a>
                     </li>
                 </ul>
-                <div class="pagination-router">
-                    <p>Page: {{currentPage}} in {{countPages}}</p>
-                    <input type="text" v-model="currentPage" v-on:keyup="goToPage">
-                </div>
+                <p>Page: {{currentPage}} in {{countPages}}</p>
             </nav>
         </div>
 
@@ -72,12 +79,12 @@
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="user-email">User E`mail</label>
-                                        <input type="text" v-model.lazy="user_email" name="email" id="user-email"
+                                        <input type="text" v-model="user_email" name="email" id="user-email"
                                                class="form-control">
                                     </div>
                                     <div class="form-group">
                                         <label for="user-name">Username</label>
-                                        <input type="text" v-model.lazy="user_name" name="username" id="user-name"
+                                        <input type="text" v-model="user_name" name="username" id="user-name"
                                                class="form-control">
                                     </div>
                                 </div>
