@@ -16,6 +16,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property double $amount
  * @property Games[] $games
  * @package App
+ * @mixin \Eloquent
  */
 class User extends Authenticatable
 {

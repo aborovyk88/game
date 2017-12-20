@@ -69,7 +69,6 @@ class UserController extends Controller
      */
     public function create(UserRequest $userRequest) {
         try {
-            /** @var Builder $user */
             $user = new User($userRequest->all());
             $user->generatePassword();
             $user->save();

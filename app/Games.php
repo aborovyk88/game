@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string $updated_at
  * @property User $user
  * @package App
+ * @mixin \Eloquent
  */
 class Games extends Model
 {

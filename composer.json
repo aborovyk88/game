@@ -6,6 +6,8 @@
     "type": "project",
     "require": {
         "php": ">=7.0.22",
+        "barryvdh/laravel-ide-helper": "^2.4",
+        "doctrine/dbal": "^2.5",
         "laravel/framework": "5.3.*"
     },
     "require-dev": {
