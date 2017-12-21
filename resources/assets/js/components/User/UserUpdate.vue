@@ -77,9 +77,6 @@
         created () {
             this.getDataUser(this.user_id);
         },
-        watch: {
-            user_id: 'getDataUser'
-        },
         components: {
             FormErrors,
             FormAlert

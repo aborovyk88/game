@@ -25,15 +25,16 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th v-for="column_name in gridColumns">
+                    <th v-for="column_name in columnsTable">
                         {{ column_name }}
+                        <input type="text" class="form-control" style="width: 60%" v-model="filters[column_name]" v-on:change="getDataTable">
                     </th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="item in gridData">
-                    <td v-for="value in gridColumns">
+                <tr v-for="item in dataTable">
+                    <td v-for="value in columnsTable">
                         {{item[value]}}
                     </td>
                     <td>
@@ -76,9 +77,9 @@
     module.exports = {
         data: function () {
             return {
-                dataTable: this.current_data,
-                countPages: this.current_page_count,
-                current_columns: null,
+                dataTable: [],
+                countPages: 0,
+                columnsTable: [],
                 perPage: 10,
                 currentPage: 1,
                 alert: {
@@ -86,6 +87,7 @@
                     alertMessage: null,
                     alertSuccess: false,
                 },
+                filters: []
             };
         },
         methods: {
@@ -97,14 +99,17 @@
                 }
             },
             getDataTable () {
+
                 let vm = this;
+                console.log(vm.filters['ID']);
                 axios.post('/users/get', {
                     currentPage: vm.currentPage,
-                    perPage: vm.perPage
+                    perPage: vm.perPage,
+                    filters: vm.gridFilters
                 }).then(response => {
                     vm.dataTable = response.data.data;
                     vm.countPages = response.data.page_count;
-                    vm.current_columns = response.data.columns;
+                    vm.columnsTable = response.data.columns;
                 });
             },
             nextPage () {
@@ -141,12 +146,14 @@
             this.getDataTable();
         },
         computed: {
-            gridColumns: function () {
-                return this.current_columns;
+            gridFilters: function () {
+                let filters = {};
+                let vm = this;
+                this.columnsTable.forEach(function (key) {
+                    filters[key] = vm.filters[key];
+                });
+                return filters;
             },
-            gridData: function () {
-                return this.dataTable;
-            }
         },
         components: {
             FormAlert

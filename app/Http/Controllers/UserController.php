@@ -44,7 +44,8 @@ class UserController extends Controller
      */
     public function get(Request $request) {
         $data = $request->input();
-        $users = User::getPaginateData($data['currentPage'], $data['perPage']);
+        $filters = $data['filters'];
+        $users = User::getPaginateData($data['currentPage'], $data['perPage'], $filters);
         $columns = User::getAttributeLabels();
         return response()->json([
                                     'data' => $users['data'],

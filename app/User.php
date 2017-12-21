@@ -107,23 +107,54 @@ class User extends Authenticatable
      *
      * @param int $current_page
      * @param int $per_page
+     * @param array $filters
      * @return array
      */
-    public static function getPaginateData(int $current_page = 0, int $per_page = 10): array {
-        /** @var Collection $users */
+    public static function getPaginateData(int $current_page = 0, int $per_page = 10, array $filters = []): array {
         $current_page = self::processCurrentPage($current_page);
-        $users = self::orderBy('amount', 'desc')->get();
-        $array_users = $users->chunk($per_page);
-        $page_count = $array_users->count();
-        $array_users = $array_users->get($current_page)->toArray();
+        $query = self::query();
+        if (!empty($filters)) {
+            foreach($filters as $key => $value) {
+                $column = self::prepareFilterKey($key);
+                if (!empty($column) && !empty($value)) {
+                    $query = $query->where($column, 'LIKE', $value . '%');
+                }
+            }
+        }
+        $users = $query->orderBy('amount', 'desc')->get();
+        if (!$users->isEmpty()) {
+            $array_users = $users->chunk($per_page);
+            $page_count = $array_users->count();
+            $array_users = $array_users->get($current_page);
+            $array_users = $array_users->toArray();
+            return [
+                'count' => $page_count,
+                'data' => self::getDataLabels($array_users),
+            ];
+        }
         return [
-            'count' => $page_count,
-            'data' => self::getDataLabels($array_users),
+            'count' => 0,
+            'data' => []
         ];
+
     }
 
 
     /**
+     * Get column name for where statement with attribute label
+     *
+     * @param string $key
+     * @return string
+     */
+    public static function prepareFilterKey (string $key): string {
+        $flip_labels = array_flip(self::attributeLabels());
+        return $flip_labels[$key] ?? null;
+    }
+
+
+    /**
+     * Get formatted current grid page
+     *
      * @param $current_page
      * @return int
      */

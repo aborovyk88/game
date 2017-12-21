@@ -33,7 +33,6 @@
 
 <script>
     import Form from 'vform';
-    import axios from 'axios';
     import FormErrors from '../Site/FormErrors.vue';
     import FormAlert from '../Site/FormAlert.vue';
 
