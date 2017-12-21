@@ -113,16 +113,14 @@ class User extends Authenticatable
     public static function getPaginateData(int $current_page = 0, int $per_page = 10, array $filters = []): array {
         $current_page = self::processCurrentPage($current_page);
         $query = self::query();
-        if (!empty($filters)) {
-            foreach($filters as $key => $value) {
-                $column = self::prepareFilterKey($key);
-                if (!empty($column) && !empty($value)) {
-                    $query = $query->where($column, 'LIKE', $value . '%');
-                }
+        foreach($filters as $key => $value) {
+            $column = self::prepareFilterKey($key);
+            if(!empty($column) && !empty($value)) {
+                $query = $query->where($column, 'LIKE', $value . '%');
             }
         }
         $users = $query->orderBy('amount', 'desc')->get();
-        if (!$users->isEmpty()) {
+        if(!$users->isEmpty()) {
             $array_users = $users->chunk($per_page);
             $page_count = $array_users->count();
             $array_users = $array_users->get($current_page);
@@ -134,9 +132,8 @@ class User extends Authenticatable
         }
         return [
             'count' => 0,
-            'data' => []
+            'data' => [],
         ];
-
     }
 
 
@@ -146,7 +143,7 @@ class User extends Authenticatable
      * @param string $key
      * @return string
      */
-    public static function prepareFilterKey (string $key): string {
+    public static function prepareFilterKey(string $key): string {
         $flip_labels = array_flip(self::attributeLabels());
         return $flip_labels[$key] ?? null;
     }

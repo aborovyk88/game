@@ -27,7 +27,7 @@
                 <tr>
                     <th v-for="column_name in columnsTable">
                         {{ column_name }}
-                        <input type="text" class="form-control" style="width: 60%" v-model="filters[column_name]" v-on:change="getDataTable">
+                        <input type="text" class="form-control" style="width: 60%" v-model="filters[column_name]" v-on:keyup="getDataTable">
                     </th>
                     <th></th>
                 </tr>
