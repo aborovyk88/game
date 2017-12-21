@@ -18,7 +18,7 @@
             </div>
             <div class="col-md-3">
                 <label class="control-label" for="go-page">Go To Page</label>
-                <input type="text" v-model="currentPage" v-on:keyup="goToPage" class="form-control" id="go-page">
+                <input type="text" v-model="currentPage" v-on:keyup="goToPage" class="form-control" id="go-page"/>
             </div>
         </div>
         <div class="row">
@@ -27,7 +27,7 @@
                 <tr>
                     <th v-for="column_name in columnsTable">
                         {{ column_name }}
-                        <input type="text" class="form-control" style="width: 60%" v-model="filters[column_name]" v-on:keyup="getDataTable">
+                        <input type="text" class="form-control" style="width: 60%" v-model="filters[column_name]" v-on:keyup="getDataTable"/>
                     </th>
                     <th></th>
                 </tr>

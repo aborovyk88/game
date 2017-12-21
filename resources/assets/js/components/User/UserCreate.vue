@@ -12,7 +12,7 @@
                 <div class="form-group" :class="{ 'has-error': form.errors.has('email') }">
                     <label for="user-email">User E`mail</label>
                     <input type="text" v-model="form.email" name="email" id="user-email"
-                           class="form-control">
+                           class="form-control"/>
                     <form-errors v-if="hasError" :errors="errors">
                         {{ errors.email[0] }}
                     </form-errors>
@@ -20,7 +20,7 @@
                 <div class="form-group" :class="{ 'has-error': form.errors.has('name') }">
                     <label for="user-name">Username</label>
                     <input type="text" v-model="form.name" name="username" id="user-name"
-                           class="form-control">
+                           class="form-control"/>
                     <form-errors v-if="hasError" :errors="errors">
                         {{ errors.name[0] }}
                     </form-errors>
