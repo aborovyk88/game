@@ -13,10 +13,6 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('login', require('./components/Login.vue'));
-Vue.component('register', require('./components/Register.vue'));
-Vue.component('home', require('./components/Home.vue'));
-
 const app = new Vue({
-    el: '#app'
+    el: '#app',
 });
