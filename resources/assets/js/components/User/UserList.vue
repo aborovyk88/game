@@ -22,12 +22,12 @@
             </div>
         </div>
         <div class="row">
-            <table class="table">
+            <table class="table table-condensed table-hover">
                 <thead>
                 <tr>
                     <th v-for="column_name in columnsTable">
                         {{ column_name }}
-                        <input type="text" class="form-control" style="width: 60%" v-model="filters[column_name]" v-on:keyup="getDataTable"/>
+                        <input type="text" class="form-control" style="width: 60%" v-model="filters[column_name]" v-on:keyup="filterUsers"/>
                     </th>
                     <th></th>
                 </tr>
@@ -99,7 +99,6 @@
                 }
             },
             getDataTable () {
-
                 let vm = this;
                 console.log(vm.filters['ID']);
                 axios.post('/users/get', {
@@ -139,6 +138,10 @@
                 this.alert.isShowAlert = isShow;
                 this.alert.alertMessage = msg;
                 this.alert.alertSuccess = type;
+                this.getDataTable();
+            },
+            filterUsers () {
+                this.currentPage = 1;
                 this.getDataTable();
             }
         },
