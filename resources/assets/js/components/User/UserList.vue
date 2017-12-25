@@ -25,9 +25,10 @@
             <table class="table table-condensed table-hover">
                 <thead>
                 <tr>
-                    <th v-for="column_name in columnsTable">
+                    <th v-for="column_name in columnsTable" @click="orderUsers(column_name)">
                         {{ column_name }}
-                        <input type="text" class="form-control" style="width: 60%" v-model="filters[column_name]" v-on:keyup="filterUsers"/>
+                        <span class="arrow" :class="gridOrders[column_name] > 0 ? 'asc' : 'dsc'"></span>
+                        <input type="text" class="form-control" style="width: 60%" v-model="filters[column_name]" v-on:keyup="filterUsers" title="search"/>
                     </th>
                     <th></th>
                 </tr>
@@ -75,7 +76,7 @@
     import FormAlert from '../Site/FormAlert.vue';
 
     module.exports = {
-        data: function () {
+        data () {
             return {
                 dataTable: [],
                 countPages: 0,
@@ -87,7 +88,8 @@
                     alertMessage: null,
                     alertSuccess: false,
                 },
-                filters: []
+                filters: [],
+                orders: []
             };
         },
         methods: {
@@ -100,15 +102,14 @@
             },
             getDataTable () {
                 let vm = this;
-                console.log(vm.filters['ID']);
                 axios.post('/users/get', {
                     currentPage: vm.currentPage,
                     perPage: vm.perPage,
-                    filters: vm.gridFilters
+                    filters: vm.gridFilters,
+                    orders: vm.gridOrders
                 }).then(response => {
                     vm.dataTable = response.data.data;
                     vm.countPages = response.data.page_count;
-                    vm.columnsTable = response.data.columns;
                 });
             },
             nextPage () {
@@ -143,13 +144,27 @@
             filterUsers () {
                 this.currentPage = 1;
                 this.getDataTable();
+            },
+            orderUsers (column_name) {
+                this.orders[column_name] = this.orders[column_name] * -1;
+                this.getDataTable();
             }
         },
         created () {
-            this.getDataTable();
+            let vm = this;
+            axios.post('/users/get', {
+                currentPage: vm.currentPage,
+                perPage: vm.perPage,
+                filters: vm.gridFilters,
+                orders: vm.gridOrders
+            }).then(response => {
+                vm.dataTable = response.data.data;
+                vm.countPages = response.data.page_count;
+                vm.columnsTable = response.data.columns;
+            });
         },
         computed: {
-            gridFilters: function () {
+            gridFilters () {
                 let filters = {};
                 let vm = this;
                 this.columnsTable.forEach(function (key) {
@@ -157,6 +172,24 @@
                 });
                 return filters;
             },
+            gridOrders () {
+                let orders = {};
+                let vm = this;
+                this.columnsTable.forEach(function (key) {
+                    orders[key] = vm.orders[key];
+                });
+                return orders;
+            }
+        },
+        watch: {
+            columnsTable (val) {
+                let sortOrders = {};
+                val.forEach(function (key) {
+                    sortOrders[key] = 1
+                });
+
+                this.orders = sortOrders;
+            }
         },
         components: {
             FormAlert

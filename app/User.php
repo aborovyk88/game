@@ -1,6 +1,5 @@
 <?php namespace App;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -23,6 +22,9 @@ class User extends Authenticatable
     use Notifiable;
 
     const GAME_AMOUNT = 10;
+
+    const ORDER_ASC = 1;
+    const ORDER_DESC = -1;
 
     /**
      * The attributes that are mass assignable.
@@ -56,6 +58,17 @@ class User extends Authenticatable
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'amount' => 'Amount',
+        ];
+    }
+
+
+    /**
+     * @return array
+     */
+    public static function orderKeys(): array {
+        return [
+            self::ORDER_ASC => 'asc',
+            self::ORDER_DESC => 'desc'
         ];
     }
 
@@ -108,23 +121,33 @@ class User extends Authenticatable
      * @param int $current_page
      * @param int $per_page
      * @param array $filters
+     * @param array $orders
      * @return array
      */
-    public static function getPaginateData(int $current_page = 0, int $per_page = 10, array $filters = []): array {
+    public static function getPaginateData(int $current_page = 0, int $per_page = 10, array $filters = [], array $orders = []): array {
         $current_page = self::processCurrentPage($current_page);
         $query = self::query();
+
         foreach($filters as $key => $value) {
             $column = self::prepareFilterKey($key);
             if(!empty($column) && !empty($value)) {
                 $query = $query->where($column, 'LIKE', $value . '%');
             }
         }
-        $users = $query->orderBy('amount', 'desc')->get();
+
+        foreach($orders as $key => $value) {
+            $column = self::prepareFilterKey($key);
+            if (!empty($column) && $value == self::ORDER_DESC) {
+                $value = self::prepareOrderValue($value);
+                $query = $query->orderBy($column, $value);
+            }
+        }
+        $sql = $query->toSql();
+        $users = $query->get();
         if(!$users->isEmpty()) {
             $array_users = $users->chunk($per_page);
             $page_count = $array_users->count();
-            $array_users = $array_users->get($current_page);
-            $array_users = $array_users->toArray();
+            $array_users = $array_users->get($current_page)->toArray();
             return [
                 'count' => $page_count,
                 'data' => self::getDataLabels($array_users),
@@ -150,6 +173,17 @@ class User extends Authenticatable
 
 
     /**
+     * Get sort key
+     *
+     * @param int $value
+     * @return string
+     */
+    public static function prepareOrderValue(int $value): string {
+        return self::orderKeys()[$value] ?? self::ORDER_ASC;
+    }
+
+
+    /**
      * Get formatted current grid page
      *
      * @param $current_page
@@ -162,7 +196,7 @@ class User extends Authenticatable
 
 
     /**
-     * increment or decrement amount user
+     * Increment or decrement amount user
      *
      * @param boolean $is_win
      * @return bool
