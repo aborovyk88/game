@@ -25,9 +25,11 @@
             <table class="table table-condensed table-hover">
                 <thead>
                 <tr>
-                    <th v-for="column_name in columnsTable" @click="orderUsers(column_name)">
-                        {{ column_name }}
-                        <span class="arrow" :class="gridOrders[column_name] > 0 ? 'asc' : 'dsc'"></span>
+                    <th v-for="column_name in columnsTable">
+                        <div @click="orderUsers(column_name)">
+                            {{ column_name }}
+                            <span class="arrow" :class="gridOrders[column_name] > 0 ? 'asc' : 'dsc'"></span>
+                        </div>
                         <input type="text" class="form-control" style="width: 60%" v-model="filters[column_name]" v-on:keyup="filterUsers" title="search"/>
                     </th>
                     <th></th>

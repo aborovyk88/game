@@ -142,7 +142,6 @@ class User extends Authenticatable
                 $query = $query->orderBy($column, $value);
             }
         }
-        $sql = $query->toSql();
         $users = $query->get();
         if(!$users->isEmpty()) {
             $array_users = $users->chunk($per_page);
