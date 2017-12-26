@@ -26,12 +26,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $data = User::getPaginateData();
-        $columns = User::getAttributeLabels();
-        $page_count = $data['count'];
-        $user_columns = json_encode($columns, JSON_UNESCAPED_UNICODE);
-        $user_data = json_encode($data['data'], JSON_UNESCAPED_UNICODE);
-        return view('user.index', compact('user_data', 'user_columns', 'page_count'));
+        return view('user.index');
     }
 
 

@@ -17,14 +17,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @package App
  * @mixin \Eloquent
  */
-class User extends Authenticatable
+class User extends Authenticatable implements IListingData
 {
     use Notifiable;
-
-    const GAME_AMOUNT = 10;
-
-    const ORDER_ASC = 1;
-    const ORDER_DESC = -1;
+    use TListingData;
 
     /**
      * The attributes that are mass assignable.
@@ -63,138 +59,6 @@ class User extends Authenticatable
 
 
     /**
-     * @return array
-     */
-    public static function orderKeys(): array {
-        return [
-            self::ORDER_ASC => 'asc',
-            self::ORDER_DESC => 'desc'
-        ];
-    }
-
-
-    /**
-     * @param string $attribute
-     * @return string|null
-     */
-    public static function getAttributeLabel(string $attribute): string {
-        return self::attributeLabels()[$attribute] ?? null;
-    }
-
-
-    /**
-     * Get attribute label for column title table users
-     *
-     * @return array
-     */
-    public static function getAttributeLabels(): array {
-        $data = [];
-        foreach(self::attributeLabels() as $label) {
-            $data[] = $label;
-        }
-        return $data;
-    }
-
-
-    /**
-     * Get users data with attribute labels
-     *
-     * @param array $users_array
-     * @return array
-     */
-    public static function getDataLabels(array $users_array): array {
-        $data = [];
-        foreach($users_array as $user) {
-            $temp = [];
-            foreach($user as $attribute => $value) {
-                $temp[User::getAttributeLabel($attribute)] = $value;
-            }
-            $data[] = $temp;
-        }
-        return $data;
-    }
-
-
-    /**
-     * Get users data chunk
-     *
-     * @param int $current_page
-     * @param int $per_page
-     * @param array $filters
-     * @param array $orders
-     * @return array
-     */
-    public static function getPaginateData(int $current_page = 0, int $per_page = 10, array $filters = [], array $orders = []): array {
-        $current_page = self::processCurrentPage($current_page);
-        $query = self::query();
-
-        foreach($filters as $key => $value) {
-            $column = self::prepareFilterKey($key);
-            if(!empty($column) && !empty($value)) {
-                $query = $query->where($column, 'LIKE', $value . '%');
-            }
-        }
-
-        foreach($orders as $key => $value) {
-            $column = self::prepareFilterKey($key);
-            if (!empty($column) && $value == self::ORDER_DESC) {
-                $value = self::prepareOrderValue($value);
-                $query = $query->orderBy($column, $value);
-            }
-        }
-        $users = $query->get();
-        if(!$users->isEmpty()) {
-            $array_users = $users->chunk($per_page);
-            $page_count = $array_users->count();
-            $array_users = $array_users->get($current_page)->toArray();
-            return [
-                'count' => $page_count,
-                'data' => self::getDataLabels($array_users),
-            ];
-        }
-        return [
-            'count' => 0,
-            'data' => [],
-        ];
-    }
-
-
-    /**
-     * Get column name for where statement with attribute label
-     *
-     * @param string $key
-     * @return string
-     */
-    public static function prepareFilterKey(string $key): string {
-        $flip_labels = array_flip(self::attributeLabels());
-        return $flip_labels[$key] ?? null;
-    }
-
-
-    /**
-     * Get sort key
-     *
-     * @param int $value
-     * @return string
-     */
-    public static function prepareOrderValue(int $value): string {
-        return self::orderKeys()[$value] ?? self::ORDER_ASC;
-    }
-
-
-    /**
-     * Get formatted current grid page
-     *
-     * @param $current_page
-     * @return int
-     */
-    public static function processCurrentPage(int $current_page): int {
-        $current_page--;
-        return $current_page < 0 ? 0 : $current_page;
-    }
-
-
-    /**
      * Increment or decrement amount user
      *
      * @param boolean $is_win
@@ -202,10 +66,10 @@ class User extends Authenticatable
      */
     public function updateAmount(bool $is_win): bool {
         if($is_win) {
-            $this->amount -= self::GAME_AMOUNT;
+            $this->amount -= Games::GAME_AMOUNT;
         }
         else {
-            $this->amount += self::GAME_AMOUNT;
+            $this->amount += Games::GAME_AMOUNT;
         }
         return $this->update();
     }

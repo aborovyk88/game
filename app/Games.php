@@ -14,14 +14,32 @@ use Illuminate\Notifications\Notifiable;
  * @package App
  * @mixin \Eloquent
  */
-class Games extends Model
+class Games extends Model implements IListingData
 {
     use Notifiable;
+    use TListingData;
 
+    const GAME_AMOUNT = 10;
+
+    /**
+     * @var array
+     */
     protected $fillable = [
         'user_id',
         'is_win',
     ];
+
+
+    /**
+     * @return array
+     */
+    public static function attributeLabels(): array {
+        return [
+            'id' => 'ID',
+            'user_id' => 'User ID',
+            'is_win' => 'Is User Win',
+        ];
+    }
 
 
     /**
@@ -32,5 +50,4 @@ class Games extends Model
     public function user() {
         return $this->hasOne('app\User', 'id', 'user_id');
     }
-
 }

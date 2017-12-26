@@ -2,6 +2,8 @@
 
 use App\Games;
 use App\Http\Requests\GameRequest;
+use Exception;
+use Illuminate\Http\Request;
 
 /**
  * Class GameController
@@ -43,5 +45,57 @@ class GameController extends Controller
         return response()->json([
                                     'success' => $success,
                                 ]);
+    }
+
+
+    /**
+     * Get games data with page
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function get(Request $request) {
+        $data = $request->input();
+        $users = Games::getPaginateData($data['currentPage'], $data['perPage'], $data['filters'], $data['orders']);
+        $columns = Games::getAttributeLabels();
+        return response()->json([
+                                    'data' => $users['data'],
+                                    'page_count' => $users['count'],
+                                    'columns' => $columns,
+                                ]);
+    }
+
+
+    /**
+     * Get data game with ID
+     *
+     * @param Games $game
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getData(Games $game) {
+        return response()->json($game);
+    }
+
+
+    /**
+     * Delete game
+     *
+     * @param Games $game
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete(Games $game) {
+        try {
+            $game->delete();
+            return response()->json([
+                                        'success' => true,
+                                        'msg' => 'Game has been successful delete',
+                                    ]);
+        }
+        catch(Exception $exception) {
+            return response()->json([
+                                        'success' => false,
+                                        'msg' => $exception->getMessage(),
+                                    ]);
+        }
     }
 }

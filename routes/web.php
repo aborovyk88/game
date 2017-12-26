@@ -17,14 +17,16 @@ Route::get('/', 'HomeController@index');
 
 //games
 Route::get('/game', 'GameController@index');
+Route::get('/game/get/{game}', 'GameController@getData');
+Route::post('/game/get', 'GameController@get');
 Route::post('/game/store', 'GameController@store');
+Route::post('/game/delete/{game}', 'GameController@delete');
+Route::resource('games', 'GameController', ['only' => ['getData', 'delete']]);
 
-//users index
+//users
 Route::get('/users', 'UserController@index');
-
-//users crud
-Route::post('/users/get', 'UserController@get');
 Route::get('/users/get/{user}', 'UserController@getData');
+Route::post('/users/get', 'UserController@get');
 Route::post('/users/delete/{user}', 'UserController@delete');
 Route::post('/users/create', 'UserController@create');
 Route::post('/users/update/{user}', 'UserController@update');
