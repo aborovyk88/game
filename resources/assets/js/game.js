@@ -1,6 +1,15 @@
 require('./bootstrap');
-Vue.component('monster_game', require('./components/Game.vue'));
+
+import VueRouter from "vue-router";
+import routes from './routers/routes_game';
+
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+    routes
+});
+
 
 new Vue({
-    el: '#game-container'
-});
+    router
+}).$mount('#game-container');

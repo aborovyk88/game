@@ -38,6 +38,8 @@ class Games extends Model implements IListingData
             'id' => 'ID',
             'user_id' => 'User ID',
             'is_win' => 'Is User Win',
+            'created_at' => 'Created',
+            'updated_at' => 'Updated'
         ];
     }
 

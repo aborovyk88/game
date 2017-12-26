@@ -5,11 +5,32 @@
 @endsection
 
 @section('content')
-<div id="game-container">
-    <monster_game user_id="{{Auth::user()->id}}"></monster_game>
-</div>
+    <div id="game-container" class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <ul class="nav nav-pills nav-stacked">
+                    <li role="presentation" class="menu-item active">
+                        <router-link to="/">Game Run</router-link>
+                    </li>
+                    <li role="presentation" class="menu-item">
+                        <router-link to="/game-manage">Game Manage</router-link>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-10">
+                <router-view></router-view>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
     <script src="/js/game.js"></script>
+
+    <script>
+        $('li.menu-item').click(function () {
+            $('ul.nav>li').removeClass('active');
+            $(this).addClass('active');
+        });
+    </script>
 @endsection

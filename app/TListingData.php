@@ -40,7 +40,8 @@ trait TListingData
      */
     public static function getAttributeLabels(): array {
         $data = [];
-        foreach(self::attributeLabels() as $label) {
+        $labels = self::attributeLabels();
+        foreach($labels as $label) {
             $data[] = $label;
         }
         return $data;

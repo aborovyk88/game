@@ -1,6 +1,6 @@
-import List from './components/User/UserList.vue';
-import Create from './components/User/UserCreate.vue';
-import Update from './components/User/UserUpdate.vue';
+import List from '../components/User/UserList.vue';
+import Create from '../components/User/UserCreate.vue';
+import Update from '../components/User/UserUpdate.vue';
 
 module.exports = [
     {
