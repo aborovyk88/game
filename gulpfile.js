@@ -14,9 +14,12 @@ require('laravel-elixir-vue-2');
  */
 
 elixir(function(mix) {
-    mix.sass('app.scss').webpack('app.js');
+    mix.sass('app.scss').webpack('home.js');
     mix.styles('../css/game.css').webpack('game.js');
-    mix.webpack('user-manage.js');
+    mix.webpack('user-manage.js').styles("../css/user-list.css");
     mix.copy('node_modules/bootstrap-sass/assets/fonts/bootstrap/','public/fonts/bootstrap');
     mix.webpack('login.js');
+
+    mix.webpack('sw.js');
+    mix.webpack('main.js');
 });

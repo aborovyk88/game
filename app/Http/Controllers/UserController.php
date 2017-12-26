@@ -2,7 +2,6 @@
 
 use App\Http\Requests\UserRequest;
 use App\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Exception;
 use Auth;

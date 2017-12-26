@@ -26,7 +26,7 @@
                 <thead>
                 <tr>
                     <th v-for="column_name in columnsTable">
-                        <div @click="orderUsers(column_name)">
+                        <div @click="orderUsers(column_name)" class="column-header">
                             {{ column_name }}
                             <span class="arrow" :class="gridOrders[column_name] > 0 ? 'asc' : 'dsc'"></span>
                         </div>
@@ -36,11 +36,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="item in dataTable">
-                    <td v-for="value in columnsTable">
+                <tr v-for="item in dataTable" class="row-table">
+                    <td v-for="value in columnsTable" class="item-table">
                         {{item[value]}}
                     </td>
-                    <td>
+                    <td class="row-controls item-table">
                         <router-link :to="{ name: 'updateUser', params: { id: item['ID'] }}" class="btn btn-sm btn-primary" title="Edit User">
                             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                         </router-link>
@@ -98,7 +98,10 @@
             deleteUser (id) {
                 if (confirm('Do you really want to delete this user?')) {
                     axios.post('/users/delete/' + id).then(response => {
-                        this.showAlert(response.data.msg, response.data.success, true);
+                        this.alert.isShowAlert = true;
+                        this.alert.alertMessage = response.data.msg;
+                        this.alert.alertSuccess = response.data.success;
+                        this.getDataTable();
                     });
                 }
             },
@@ -135,12 +138,6 @@
                     this.currentPage = this.countPages;
                 }
 
-                this.getDataTable();
-            },
-            showAlert (msg, type, isShow) {
-                this.alert.isShowAlert = isShow;
-                this.alert.alertMessage = msg;
-                this.alert.alertSuccess = type;
                 this.getDataTable();
             },
             filterUsers () {
