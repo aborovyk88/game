@@ -5,11 +5,12 @@ self.addEventListener('install', (event) => {
     console.log('Installed');
     event.waitUntil(
         caches.open(CACHE).then((cache) => cache.addAll([
-                '/js/app.js',
                 '/js/game.js',
                 '/js/login.js',
                 '/js/user-list.js',
                 '/js/user-manage.js',
+                '/js/home.js',
+                '/js/main.js',
 
                 '/css',
 
