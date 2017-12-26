@@ -89,7 +89,12 @@ class UserController extends Controller
      */
     public function delete(User $user) {
         try {
+            if (Auth::user()->id === $user->id) {
+                throw new Exception('You can not remove yourself', 500);
+            }
+
             $user->delete();
+
             return response()->json([
                                         'success' => true,
                                         'msg' => 'User has been successful delete',

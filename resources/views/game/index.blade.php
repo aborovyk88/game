@@ -18,7 +18,7 @@
                 </ul>
             </div>
             <div class="col-md-10">
-                <router-view></router-view>
+                <router-view :user_id="{{Auth::user()->id}}"></router-view>
             </div>
         </div>
     </div>

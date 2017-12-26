@@ -153,8 +153,6 @@
             sendResults: function () {
                 axios.post('/game/store', this.resultGame).then(response => {
                     this.isSendResult = response.success
-                }).catch(e => {
-                    this.errors.push(e);
                 });
             }
         },
