@@ -24,7 +24,15 @@
 }
 
 .row-controls {
-    display: ruby;
+    width: 80px;
+}
+
+.item-table {
+    vertical-align: middle!important;
+}
+
+.row-table {
+    height: 55px;
 }
 
 table.loading > tbody {

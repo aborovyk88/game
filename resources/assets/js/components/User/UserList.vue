@@ -14,6 +14,8 @@
                     <option value="10">10</option>
                     <option value="50">50</option>
                     <option value="100">100</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
                 </select>
             </div>
             <div class="col-md-3">
@@ -41,12 +43,14 @@
                         {{item[value]}}
                     </td>
                     <td class="row-controls item-table">
-                        <router-link :to="{ name: 'updateUser', params: { id: item['ID'] }}" class="btn btn-sm btn-primary" title="Edit User">
-                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                        </router-link>
-                        <button @click="deleteUser(item['ID'])" class="btn btn-sm btn-danger" title="Delete User">
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        </button>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <router-link :to="{ name: 'updateUser', params: { id: item['ID'] }}" class="btn btn-sm btn-primary" title="Edit User">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                            </router-link>
+                            <button @click="deleteUser(item['ID'])" class="btn btn-sm btn-danger" title="Delete User">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
