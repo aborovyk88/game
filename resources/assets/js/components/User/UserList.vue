@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="row">
-            <table class="table table-condensed table-hover">
+            <table class="table table-condensed table-hover" :class="loadingTable ? 'loading' : ''">
                 <thead>
                 <tr>
                     <th v-for="column_name in columnsTable">
@@ -91,7 +91,8 @@
                     alertSuccess: false,
                 },
                 filters: [],
-                orders: []
+                orders: [],
+                loadingTable: false
             };
         },
         methods: {
@@ -107,12 +108,14 @@
             },
             getDataTable () {
                 let vm = this;
+                vm.loadingTable = true;
                 axios.post('/users/get', {
                     currentPage: vm.currentPage,
                     perPage: vm.perPage,
                     filters: vm.gridFilters,
                     orders: vm.gridOrders
                 }).then(response => {
+                    vm.loadingTable = false;
                     vm.dataTable = response.data.data;
                     vm.countPages = response.data.page_count;
                 });
@@ -151,12 +154,14 @@
         },
         created () {
             let vm = this;
+            vm.loadingTable = true;
             axios.post('/users/get', {
                 currentPage: vm.currentPage,
                 perPage: vm.perPage,
                 filters: vm.gridFilters,
                 orders: vm.gridOrders
             }).then(response => {
+                vm.loadingTable = false;
                 vm.dataTable = response.data.data;
                 vm.countPages = response.data.page_count;
                 vm.columnsTable = response.data.columns;
@@ -184,7 +189,7 @@
             columnsTable (val) {
                 let sortOrders = {};
                 val.forEach(function (key) {
-                    sortOrders[key] = 1
+                    sortOrders[key] = 1;
                 });
 
                 this.orders = sortOrders;

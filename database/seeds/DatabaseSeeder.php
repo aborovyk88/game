@@ -14,12 +14,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $count = 0;
-        while ($count < 10000) {
+        while ($count < 20000) {
             DB::table('users')->insert([
-                'name' => random_bytes(10),
-                'email' => random_bytes(10).'@gmail.com',
-                'password' => bcrypt(random_bytes(6)),
-                'remember_token' => bcrypt(random_bytes(6))
+                'name' => str_random(10),
+                'email' => str_random(10).'@gmail.com',
+                'password' => bcrypt(str_random(6)),
+                'remember_token' => bcrypt(str_random(6))
             ]);
             $count++;
         }

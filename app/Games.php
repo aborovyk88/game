@@ -16,8 +16,7 @@ use Illuminate\Notifications\Notifiable;
  */
 class Games extends Model implements IListingData
 {
-    use Notifiable;
-    use TListingData;
+    use Notifiable, TListingData;
 
     const GAME_AMOUNT = 10;
 

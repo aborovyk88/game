@@ -38,13 +38,8 @@ trait TListingData
      *
      * @return array
      */
-    public static function getAttributeLabels(): array {
-        $data = [];
-        $labels = self::attributeLabels();
-        foreach($labels as $label) {
-            $data[] = $label;
-        }
-        return $data;
+    public static function getColumnLabels(): array {
+        return array_values(self::attributeLabels());
     }
 
 
@@ -59,7 +54,10 @@ trait TListingData
         foreach($models_array as $model) {
             $temp = [];
             foreach($model as $attribute => $value) {
-                $temp[self::getAttributeLabel($attribute)] = $value;
+                $label = self::getAttributeLabel($attribute);
+                if(!empty($label)) {
+                    $temp[$label] = $value;
+                }
             }
             $data[] = $temp;
         }
@@ -70,41 +68,35 @@ trait TListingData
     /**
      * Get models data chunk
      *
-     * @param int $current_page
-     * @param int $per_page
-     * @param array $filters
-     * @param array $orders
+     * @param array $request
      * @return array
      */
-    public static function getPaginateData(int $current_page = 0,
-                                           int $per_page = 10,
-                                           array $filters = [],
-                                           array $orders = []): array {
+    public static function getData(array $request): array {
         /**
          * @var Builder $query
          */
-        $current_page = self::processCurrentPage($current_page);
         $query = self::query();
-        foreach($filters as $key => $value) {
+        foreach($request['filters'] as $key => $value) {
             $column = self::prepareFilterKey($key);
             if(!empty($column) && !empty($value)) {
                 $query = $query->where($column, 'LIKE', $value . '%');
             }
         }
-        foreach($orders as $key => $value) {
+        foreach($request['orders'] as $key => $value) {
             $column = self::prepareFilterKey($key);
             if(!empty($column) && $value == self::$ORDER_DESC) {
                 $value = self::prepareOrderValue($value);
                 $query = $query->orderBy($column, $value);
             }
         }
-        $models = $query->get();
+        $count = $query->count();
+        $models = $query->forPage($request['currentPage'], $request['perPage'])
+                        ->get();
         if(!$models->isEmpty()) {
-            $array_models = $models->chunk($per_page);
-            $page_count = $array_models->count();
-            $array_models = $array_models->get($current_page)->toArray();
+            $countPages = ceil($count / $request['perPage']);
+            $array_models = $models->toArray();
             return [
-                'count' => $page_count,
+                'count' => $countPages,
                 'data' => self::getDataLabels($array_models),
             ];
         }
@@ -136,17 +128,4 @@ trait TListingData
     public static function prepareOrderValue(int $value): string {
         return self::orderKeys()[$value] ?? self::$ORDER_ASC;
     }
-
-
-    /**
-     * Get formatted current grid page
-     *
-     * @param $current_page
-     * @return int
-     */
-    public static function processCurrentPage(int $current_page): int {
-        $current_page--;
-        return $current_page < 0 ? 0 : $current_page;
-    }
-
 }

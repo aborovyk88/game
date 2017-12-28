@@ -19,8 +19,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  */
 class User extends Authenticatable implements IListingData
 {
-    use Notifiable;
-    use TListingData;
+    use Notifiable, TListingData;
 
     /**
      * The attributes that are mass assignable.

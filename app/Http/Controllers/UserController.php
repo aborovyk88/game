@@ -37,9 +37,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function get(Request $request) {
-        $data = $request->input();
-        $users = User::getPaginateData($data['currentPage'], $data['perPage'], $data['filters'], $data['orders']);
-        $columns = User::getAttributeLabels();
+        $users = User::getData($request->input());
+        $columns = User::getColumnLabels();
         return response()->json([
                                     'data' => $users['data'],
                                     'page_count' => $users['count'],
@@ -90,7 +89,7 @@ class UserController extends Controller
     public function delete(User $user) {
         try {
             if (Auth::user()->id === $user->id) {
-                throw new Exception('You can not remove yourself', 500);
+                throw new Exception("You can't remove yourself", 500);
             }
 
             $user->delete();

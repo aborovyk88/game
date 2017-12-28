@@ -4,6 +4,7 @@ use App\Games;
 use App\Http\Requests\GameRequest;
 use Exception;
 use Illuminate\Http\Request;
+use Auth;
 
 /**
  * Class GameController
@@ -25,7 +26,7 @@ class GameController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return view('game.index');
+        return view('game.index', ['user_id' => Auth::user()->id]);
     }
 
 
@@ -55,9 +56,8 @@ class GameController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function get(Request $request) {
-        $data = $request->input();
-        $users = Games::getPaginateData($data['currentPage'], $data['perPage'], $data['filters'], $data['orders']);
-        $columns = Games::getAttributeLabels();
+        $users = Games::getData($request->input());
+        $columns = Games::getColumnLabels();
         return response()->json([
                                     'data' => $users['data'],
                                     'page_count' => $users['count'],
