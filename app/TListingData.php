@@ -72,9 +72,7 @@ trait TListingData
      * @return array
      */
     public static function getData(array $request): array {
-        /**
-         * @var Builder $query
-         */
+        /** @var Builder $query */
         $query = self::query();
         foreach($request['filters'] as $key => $value) {
             $column = self::prepareFilterKey($key);
@@ -126,6 +124,6 @@ trait TListingData
      * @return string
      */
     public static function prepareOrderValue(int $value): string {
-        return self::orderKeys()[$value] ?? self::$ORDER_ASC;
+        return self::orderKeys()[$value] ?? self::orderKeys()[self::$ORDER_ASC];
     }
 }
