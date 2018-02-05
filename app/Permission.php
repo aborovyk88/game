@@ -21,7 +21,7 @@ class Permission extends EntrustPermission
 
     const PERMISSION_GAME_LIST = 'game-list';
     const PERMISSION_GAME_EDIT = 'game-create';
-    const PERMISSION_GAME_DELETE = 'game-DELETE';
+    const PERMISSION_GAME_DELETE = 'game-delete';
 
     protected $table = 'permission';
 
