@@ -2,6 +2,7 @@
 
 use App\Games;
 use App\Http\Requests\GameRequest;
+use App\Permission;
 use Exception;
 use Illuminate\Http\Request;
 use Auth;
@@ -23,9 +24,13 @@ class GameController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws Exception
      */
     public function index() {
+        if(!Auth::user()->can(Permission::PERMISSION_GAME_LIST)) {
+            throw new Exception("You are not have permission for this action", 403);
+        }
         return view('game.index', ['user_id' => Auth::user()->id]);
     }
 
@@ -37,15 +42,25 @@ class GameController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(GameRequest $gameRequest) {
-        $game = new Games($gameRequest->all());
-        $success = false;
-        $game->is_win = (integer)$game->is_win;
-        if($game->save() && $game->user->updateAmount((boolean)$game->is_win)) {
+        try {
+            if(!Auth::user()->can(Permission::PERMISSION_GAME_LIST)) {
+                throw new Exception("You are not have permission for this action", 403);
+            }
+            $game = new Games($gameRequest->all());
             $success = true;
+            $game->is_win = (integer)$game->is_win;
+            if(!$game->save() || !$game->user->updateAmount((boolean)$game->is_win)) {
+                $success = false;
+            }
+            return response()->json([
+                                        'success' => $success,
+                                    ]);
+        } catch(Exception $ex) {
+            return response()->json([
+                                        'success' => false,
+                                        'msg' => $ex->getMessage(),
+                                    ]);
         }
-        return response()->json([
-                                    'success' => $success,
-                                ]);
     }
 
 
@@ -56,13 +71,24 @@ class GameController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function get(Request $request) {
-        $users = Games::getData($request->input());
-        $columns = Games::getColumnLabels();
-        return response()->json([
-                                    'data' => $users['data'],
-                                    'page_count' => $users['count'],
-                                    'columns' => $columns,
-                                ]);
+        try {
+            if(!Auth::user()->can(Permission::PERMISSION_GAME_LIST)) {
+                throw new Exception("You are not have permission for this action", 403);
+            }
+            $users = Games::getData($request->input());
+            $columns = Games::getColumnLabels();
+            return response()->json([
+                                        'success' => true,
+                                        'data' => $users['data'],
+                                        'page_count' => $users['count'],
+                                        'columns' => $columns,
+                                    ]);
+        } catch(Exception $ex) {
+            return response()->json([
+                                        'success' => false,
+                                        'msg' => $ex->getMessage(),
+                                    ]);
+        }
     }
 
 
@@ -73,7 +99,17 @@ class GameController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function getData(Games $game) {
-        return response()->json($game);
+        try {
+            if(!Auth::user()->can(Permission::PERMISSION_GAME_LIST)) {
+                throw new Exception("You are not have permission for this action", 403);
+            }
+            return response()->json($game);
+        } catch(Exception $ex) {
+            return response()->json([
+                                        'success' => false,
+                                        'msg' => $ex->getMessage(),
+                                    ]);
+        }
     }
 
 
@@ -85,6 +121,9 @@ class GameController extends Controller
      */
     public function delete(Games $game) {
         try {
+            if(!Auth::user()->can(Permission::PERMISSION_GAME_LIST)) {
+                throw new Exception("You are not have permission for this action", 403);
+            }
             $game->delete();
             return response()->json([
                                         'success' => true,

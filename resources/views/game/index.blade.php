@@ -12,9 +12,11 @@
                     <li role="presentation" class="menu-item active">
                         <router-link to="/">Game Run</router-link>
                     </li>
-                    <li role="presentation" class="menu-item">
-                        <router-link to="/game-manage">Game Manage</router-link>
-                    </li>
+                    @role("admin")
+                        <li role="presentation" class="menu-item">
+                            <router-link to="/game-manage">Game Manage</router-link>
+                        </li>
+                    @endrole
                 </ul>
             </div>
             <div class="col-md-10">
